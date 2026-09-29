@@ -1,0 +1,14 @@
+name: insulator-repro
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pytorch>=2.2
+  - torchvision>=0.17
+  - pytorch-cuda=12.1
+  - pip
+  - pip:
+      - -r requirements.txt
+
