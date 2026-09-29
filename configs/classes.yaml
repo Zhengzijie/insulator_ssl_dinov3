@@ -1,0 +1,15 @@
+GI:
+  - GI_N
+  - GI_P
+  - GI_S
+PI:
+  - PI_N
+  - PI_P
+  - PI_De
+  - PI_Da
+CI:
+  - CI_N
+  - CI_P
+  - CI_Da
+  - CI_S
+

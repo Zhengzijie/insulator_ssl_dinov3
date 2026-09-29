@@ -1,0 +1,101 @@
+paths:
+  detection_source: /path/to/detection_source
+  ssl_source: /path/to/unlabelled_images
+  crop_source: /path/to/fine_grained_crops
+  fine_label_root: /path/to/full_image_11_class_labels
+  workspace: /path/to/workspace
+  dinov3_repo: /path/to/dinov3
+  dinov3_weight: /path/to/dinov3_vitb16_checkpoint.pth
+
+classes:
+  types:
+    GI: 0
+    PI: 1
+    CI: 2
+  fine:
+    GI: [GI_N, GI_P, GI_S]
+    PI: [PI_N, PI_P, PI_De, PI_Da]
+    CI: [CI_N, CI_P, CI_Da, CI_S]
+
+split:
+  random_state: 0
+  train_fraction: 0.70
+  validation_fraction: 0.15
+  test_fraction: 0.15
+  fallback_group_size: 50
+
+ssl:
+  methods: [simsiam, mocov2, byol, fcmae]
+  models: [yolov8s, yolov10s, yolo12s]
+  epochs: 100
+  seed: 0
+  input_size: 224
+  workers: 8
+  micro_batch: 32
+  augmentation:
+    crop_scale: [0.2, 1.0]
+    horizontal_flip_probability: 0.5
+    color_jitter_probability: 0.8
+    gaussian_blur_probability: 0.5
+
+detector:
+  models: [yolov8s, yolov10s, yolo12s]
+  initializations: [baseline, simsiam, mocov2, byol, fcmae]
+  seeds: [0, 1, 2, 3, 4]
+  epochs: 100
+  image_size: 640
+  batch: 16
+  learning_rate: 0.01
+  optimizer: auto
+  workers: 8
+  amp: true
+  deterministic: true
+
+probe:
+  train_directory_name: trian
+  backbones:
+    - dinov3
+    - dinov2
+    - vitb16_in21k
+    - convnextb_in1k
+    - resnet50_in1k
+    - dinov3_b3
+    - dinov3_b6
+    - dinov3_b9
+    - dinov3_b12
+    - dinov3_concat
+  types: [GI, PI, CI]
+  seeds: [0, 1, 2, 3, 4]
+  epochs: 50
+  image_size: 224
+  batch: 64
+  learning_rate: 0.0005
+  weight_decay: 0.01
+  workers: 8
+
+pipeline:
+  detector_model: yolo12s
+  detector_initialization: fcmae
+  seeds: [0, 1, 2, 3, 4]
+  image_size: 640
+  confidence_threshold: 0.25
+  nms_iou_threshold: 0.70
+  matching_iou_threshold: 0.50
+  maximum_detections: 300
+  crop_expansion: 0.10
+  minimum_crop_side: 32
+
+weather:
+  conditions: [fog, rain, glare]
+  fog:
+    fog_coef_range: [0.3, 0.6]
+    alpha_coef: 0.1
+  rain:
+    slant_range: [-10, 10]
+    drop_length: 20
+    drop_width: 1
+    blur_value: 3
+    brightness_coefficient: 0.9
+  glare:
+    flare_roi: [0.0, 0.0, 1.0, 0.5]
+    source_radius: 200
